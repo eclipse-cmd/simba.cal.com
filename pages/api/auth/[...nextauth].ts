@@ -42,6 +42,7 @@ export default NextAuth({
       // first time jwt callback is run, user object is available
       if (user) {
         token.id = user.id;
+        token.user = user;
       }
 
       return token;
@@ -54,9 +55,9 @@ export default NextAuth({
       return session;
     },
   },
-  secret: "test",
+  secret: process.env.NEXTAUTH_SECRET ?? "secret",
   jwt: {
-    secret: "test",
+    secret: process.env.JWT_SECRET ?? "secret",
   },
   pages: {
     signIn: "/auth/login",

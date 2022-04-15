@@ -1,0 +1,25 @@
+.datepicker-picker {
+    width: 100%;
+}
+.datepicker-cell:hover{
+    color: white;
+    background-color: black !important;
+}
+.datepicker-picker:focus{
+    color: black;
+}
+.datepicker-view {
+    display: block !important;
+}
+.datepicker-grid{
+    width: 100% !important;
+}
+
+.shadow-lg{
+    box-shadow: 0px 0px 0px !important;
+}
+/*  */@media only screen and (max-width: 500px) {
+    .datepicker-cell {
+        margin: 0rem;
+    }
+}

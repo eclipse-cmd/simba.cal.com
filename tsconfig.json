@@ -4,9 +4,11 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["components/*"],
-      "@helpers/*": ["helpers/*"],
-      "@pages/*": ["pages/*"],
+      "@components/*": ["./components/*"],
+      "@styles/*": ["./styles/*"],
+      "@helpers/*": ["./helpers/*"],
+      "@store/*": ["./store/*"],
+      "@prisma/*": ["./prisma/*"]
     },
     "skipLibCheck": true,
     "strict": true,

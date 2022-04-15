@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,13 +7,52 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String?
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  user_id      String
+  expires      DateTime
+  user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-  @@map(name: "users")
+  @@map("sessions")
+}
+
+model User {
+  id         String    @id @default(cuid())
+  username   String    @unique
+  email      String    @unique
+  password   String?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  Meeting    Meeting[]
+  Session    Session[]
+
+  @@map("users")
+}
+
+model Attendee {
+  id         String    @id @default(cuid())
+  name       String
+  email      String    @unique
+  notes      String    @default("null")
+  guests     String    @default("null")
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  Meeting    Meeting[]
+
+  @@map("attendees")
+}
+
+model Meeting {
+  id          String   @id @default(cuid())
+  user        User     @relation(fields: [user_id], references: [id])
+  user_id     String    @default("null")
+  attendee    Attendee @relation(fields: [attendee_id], references: [id])
+  attendee_id String
+  time        DateTime
+  status      String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+
+  @@map("meetings")
 }

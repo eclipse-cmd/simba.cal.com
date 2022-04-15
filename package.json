@@ -5,6 +5,7 @@
     "dev": "next dev",
     "dev-debug": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
+    "db:dev-migrate": "npx prisma migrate dev",
     "start": "next start",
     "lint": "eslint . --ext .ts,.js,.tsx,.jsx",
     "prettier": "prettier --write .",
@@ -14,12 +15,21 @@
   },
   "dependencies": {
     "@prisma/client": "3.8.1",
+    "@date-io/date-fns": "^2.13.1",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/lab": "^5.0.0-alpha.76",
+    "@mui/material": "^5.6.0",
+    "@tanem/react-nprogress": "^4.0.13",
     "axios": "^0.25.0",
     "bcryptjs": "^2.4.3",
     "next": "12.0.8",
     "next-auth": "^4.0.6",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "date-fns": "^2.28.0",
+    "react-icons": "^4.3.1",
+    "sass": "^1.50.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^3.1.1",
@@ -43,7 +53,8 @@
     "prettier": "^2.5.1",
     "prisma": "^3.8.1",
     "tailwindcss": "^3.0.15",
-    "typescript": "4.5.5"
+    "eslint-config-next": "12.1.4",
+    "typescript": "4.6.3"
   },
   "lint-staged": {
     "./{*,{pages,components,helpers}/**/*}.{js,ts,jsx,tsx}": [
@@ -53,8 +64,5 @@
     "./prisma/schema.prisma": [
       "prisma format"
     ]
-  },
-  "prisma": {
-    "seed": "ts-node ./prisma/seed.ts"
   }
 }

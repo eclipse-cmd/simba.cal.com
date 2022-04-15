@@ -1,96 +1,106 @@
-import { GetServerSidePropsContext } from "next";
-import { getCsrfToken, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import React, { useState } from "react";
 
-import { getSession } from "@helpers/auth";
+import PublicLayout from "@components/PublicLayout";
+import ButtonLoader from "@components/ui/Button";
 
-interface ServerSideProps {
-  csrfToken: string;
-}
-
-export default function Login({ csrfToken }: ServerSideProps) {
+const Login: React.FC = () => {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [input, setInput] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const callbackUrl = typeof router.query?.callbackUrl === "string" ? router.query.callbackUrl : "/";
 
-  const callbackUrl = typeof router.query?.callbackUrl === "string" ? router.query.callbackUrl : "/private";
+  // const { state, dispatch } = useContext(AppContext);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
 
-  async function handleSubmit(e: React.SyntheticEvent) {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    if (isSubmitting) {
-      return;
-    }
+    if (isLoading) return;
 
-    setIsSubmitting(true);
+    setIsLoading(true);
 
     const response = await signIn<"credentials">("credentials", {
+      ...input,
       redirect: false,
-      email,
-      password,
       callbackUrl,
     });
+
     if (!response) {
+      setIsLoading(false);
       throw new Error("Received empty response from next auth");
     }
 
     if (!response.error) {
       // we're logged in! let's do a hard refresh to the desired url
       window.location.replace(callbackUrl);
+      setIsLoading(false);
       return;
     }
-  }
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="csrfToken" type="hidden" defaultValue={csrfToken || undefined} hidden />
-      <input
-        id="email"
-        name="email"
-        type="email"
-        placeholder="email"
-        required
-        value={email}
-        onInput={(e) => setEmail(e.currentTarget.value)}
-        className="block border border-neutral-300 focus:ring-neutral-900"
-      />
-      <input
-        id="password"
-        name="password"
-        type="password"
-        placeholder="password"
-        autoComplete="current-password"
-        required
-        value={password}
-        onInput={(e) => setPassword(e.currentTarget.value)}
-        className="block border border-neutral-300 focus:ring-neutral-900"
-      />
-
-      <button type="submit" disabled={isSubmitting} className="p-1 text-white bg-blue-800">
-        SIGN IN
-      </button>
-    </form>
+    <PublicLayout title="Login">
+      <div className="flex min-h-screen">
+        <div className="max-w-2xl p-5 m-auto w-12/12 content-login-div md:w-8/12 md:px-16 lg:px-20 lg:w-8/12">
+          <section className="COMPANY-NAME">
+            <div className="mb-4 text-2xl font-medium text-center">Cal.com</div>
+            <div className="mb-4 font-semibold text-center text-1xl md:text-3xl">Sign in to your account</div>
+          </section>
+          <section className="w-full p-8 bg-white border rounded lg:w-full">
+            <div className="form-section">
+              <form onSubmit={handleSubmit}>
+                <div className="mb-6">
+                  <label htmlFor="email" className="font-semibold">
+                    Email address
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 mt-1 font-semibold border"
+                  />
+                </div>
+                <div className="mb-6">
+                  <div className="flex justify-between">
+                    <label htmlFor="password" className="font-semibold">
+                      Password
+                    </label>
+                    <div>
+                      <a href="#" className="font-semibold">
+                        Forgot password?
+                      </a>
+                    </div>
+                  </div>
+                  <input
+                    type="password"
+                    name="password"
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 mt-1 font-semibold border"
+                  />
+                </div>
+                <div className="login-btn">
+                  <ButtonLoader value="Sign in" isLoading={isLoading} type="submit" />
+                </div>
+              </form>
+            </div>
+          </section>
+          <section>
+            <div className="flex justify-center py-4 font-medium text-md item-center">
+              <span className="mr-2 text-gray-500"> Dont have an account?</span>
+              <Link href="/auth/sign-up">
+                <a className="font-semibold text-black">Create an account</a>
+              </Link>
+            </div>
+          </section>
+        </div>
+      </div>
+    </PublicLayout>
   );
-}
+};
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { req } = context;
-  const session = await getSession({ req });
-
-  if (session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {
-      csrfToken: await getCsrfToken(context),
-    },
-  };
-}
+export default Login;
