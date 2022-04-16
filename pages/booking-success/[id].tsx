@@ -1,13 +1,28 @@
+import { Meeting } from "@prisma/client";
+import moment from "moment";
+import { GetServerSideProps } from "next";
 import Image from "next/image";
-import React from "react";
+import Router from "next/router";
+import React, { useState } from "react";
 import { FaCheck, FaGoogle } from "react-icons/fa";
 
 import AppLayout from "@components/AppLayout";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface BookingSuccessProps {}
+interface BookingSuccessProps {
+  meeting: string;
+}
 
-const BookingSuccess: React.FC<BookingSuccessProps> = () => {
+const BookingSuccess: React.FC<BookingSuccessProps> = ({ meeting }) => {
+  const meet = JSON.parse(meeting) as Meeting;
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+
+    Router.push("/auth/sign-up?e=" + email);
+  };
+
   return (
     <AppLayout title="Confirmation">
       <div className="flex min-h-screen">
@@ -36,7 +51,7 @@ const BookingSuccess: React.FC<BookingSuccessProps> = () => {
                 <p>What</p>
               </div>
               <div className="w-11/12 font-medium text-gray-700">
-                15 Min Meeting between Daniel Tonel and Test
+                15 Min Meeting between Daniel Tonel and {meet.attendee_name}
               </div>
             </div>
             <div className="flex text-sm">
@@ -44,8 +59,8 @@ const BookingSuccess: React.FC<BookingSuccessProps> = () => {
                 <p>When</p>
               </div>
               <div className="w-11/12 font-medium text-gray-700">
-                Wednesday, 29 December 2021 <br />
-                4:30pm - 15 mins
+                {moment(meet.time).format("MMMM Do, YYYY")} <br />
+                {moment(meet.time).format("h:mm a")} - 15 mins
                 <span className="text-slate-500">(Europe/Vienna)</span>
               </div>
             </div>
@@ -73,17 +88,19 @@ const BookingSuccess: React.FC<BookingSuccessProps> = () => {
             <div className="text-xs text-center text-gray-400">
               <p>Create your own booking link with cal.com</p>
             </div>
-            <form action="">
+            <form onSubmit={handleSubmit}>
               <div className="flex my-4">
                 <input
                   type="text"
-                  name="username"
-                  placeholder="asdf@asdf.asdf"
+                  name="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="user@example.com"
                   className="w-8/12 px-3 py-2 font-medium border outline-0 md:w-9/12"
                 />
-                <button className="w-6/12 p-2 text-xs font-semibold text-white bg-black whitespace-nowrap md:text-sm md:w-3/12">
-                  {" "}
-                  Try it for free{" "}
+                <button
+                  type="submit"
+                  className="w-6/12 p-2 text-xs font-semibold text-white bg-black whitespace-nowrap md:text-sm md:w-3/12">
+                  Try it for free
                 </button>
               </div>
             </form>
@@ -92,6 +109,31 @@ const BookingSuccess: React.FC<BookingSuccessProps> = () => {
       </div>
     </AppLayout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { id } = context.params;
+
+  const meeting = await prisma?.meeting.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!meeting) {
+    return {
+      redirect: {
+        destination: "/booking",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      meeting: JSON.stringify(meeting),
+    },
+  };
 };
 
 export default BookingSuccess;

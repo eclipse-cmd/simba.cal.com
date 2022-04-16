@@ -15,6 +15,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ title, children }) => {
   const { state, dispatch } = useContext(AppContext);
 
   useEffect(() => {
+    console.log(session);
     if (status === "authenticated") {
       dispatch({
         type: "SET_AUTH",
@@ -22,10 +23,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({ title, children }) => {
       });
       dispatch({
         type: "SET_SESSION",
-        payload: true,
+        payload: session.id,
       });
     }
-  }, [dispatch, status]);
+  }, [dispatch, session, status]);
 
   return (
     <>

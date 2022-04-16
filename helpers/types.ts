@@ -15,7 +15,8 @@ export type User = {
 export type InitialState = {
   user: User | null;
   auth: boolean;
-  status: "loading" | "validated" | "not validated";
   // eslint-disable-next-line @typescript-eslint/ban-types
   session: {} | null;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  data: { date: Date | null };
 };

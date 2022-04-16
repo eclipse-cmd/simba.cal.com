@@ -1,4 +1,6 @@
-import React from "react";
+import axios from "axios";
+import { useRouter } from "next/router";
+import React, { useMemo, useState } from "react";
 import { FaAngleDown } from "react-icons/fa";
 
 import PublicLayout from "@components/PublicLayout";
@@ -8,6 +10,35 @@ import ButtonLoader from "@components/ui/Button";
 interface SignProps {}
 
 const SignUp: React.FC<SignProps> = () => {
+  const router = useRouter();
+  const email = useMemo(() => router.query.e, [router.query.e]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [input, setInput] = useState({ email: "good" });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+
+    if (isLoading) return;
+
+    setIsLoading(true);
+    console.log(input);
+    return;
+
+    const response = await axios.post("/api/auth/signup", input);
+
+    console.log(response);
+    return;
+
+    if (!response) {
+      setIsLoading(false);
+      throw new Error("Received empty response from next auth");
+    }
+  };
+
   return (
     <PublicLayout title="Sign up">
       <div className="flex min-h-screen bg-white">
@@ -67,7 +98,7 @@ const SignUp: React.FC<SignProps> = () => {
                       </div>
                     </div>
                     <div className="form-section">
-                      <form action="" className="my-6">
+                      <form onSubmit={handleSubmit} className="my-6">
                         <div className="flex">
                           <label htmlFor="Username" className="sr-only">
                             Username
@@ -81,6 +112,7 @@ const SignUp: React.FC<SignProps> = () => {
                           <input
                             type="text"
                             name="username"
+                            onChange={handleChange}
                             id="username"
                             placeholder="Username"
                             className="w-full px-3 py-2 font-medium border border-l-0 md:w-10/12"
@@ -92,7 +124,9 @@ const SignUp: React.FC<SignProps> = () => {
                           </label>
                           <input
                             type="email"
+                            value={email ?? ""}
                             name="email"
+                            onChange={handleChange}
                             placeholder="Email address"
                             className="w-full px-3 py-2 font-medium border"
                           />
@@ -104,6 +138,7 @@ const SignUp: React.FC<SignProps> = () => {
                           <input
                             type="password"
                             name="password"
+                            onChange={handleChange}
                             placeholder="********"
                             className="w-full px-3 py-2 font-medium border"
                           />

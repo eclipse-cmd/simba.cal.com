@@ -6,7 +6,9 @@ import { InitialState } from "@helpers/types";
 export const initialState = {
   user: null,
   auth: false,
-  status: "not loading",
+  data: {
+    date: null,
+  },
   session: {},
 };
 

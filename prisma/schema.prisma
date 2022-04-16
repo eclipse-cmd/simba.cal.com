@@ -24,35 +24,21 @@ model User {
   password   String?
   created_at DateTime  @default(now())
   updated_at DateTime  @default(now()) @updatedAt
-  Meeting    Meeting[]
   Session    Session[]
 
   @@map("users")
 }
 
-model Attendee {
-  id         String    @id @default(cuid())
-  name       String
-  email      String    @unique
-  notes      String    @default("null")
-  guests     String    @default("null")
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now()) @updatedAt
-  Meeting    Meeting[]
-
-  @@map("attendees")
-}
-
 model Meeting {
-  id          String   @id @default(cuid())
-  user        User     @relation(fields: [user_id], references: [id])
-  user_id     String    @default("null")
-  attendee    Attendee @relation(fields: [attendee_id], references: [id])
-  attendee_id String
-  time        DateTime
-  status      String
-  created_at  DateTime @default(now())
-  updated_at  DateTime @default(now()) @updatedAt
+  id             String   @id @default(cuid())
+  attendee_name  String
+  attendee_email String
+  status         String   @default("upcoming")
+  guest          String   @default("null")
+  notes          String   @default("null")
+  time           DateTime
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now()) @updatedAt
 
   @@map("meetings")
 }

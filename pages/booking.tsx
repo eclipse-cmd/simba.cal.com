@@ -1,11 +1,13 @@
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import StaticDatePicker from "@mui/lab/StaticDatePicker";
 import TextField from "@mui/material/TextField";
-import isWeekend from "date-fns/isWeekend";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import AppContext from "@store/index";
+import { isPast } from "date-fns";
 import Image from "next/image";
-import React from "react";
-import { FaClock, FaCalendar } from "react-icons/fa";
+import Router from "next/router";
+import React, { useContext } from "react";
+import { FaClock } from "react-icons/fa";
 
 import AppLayout from "@components/AppLayout";
 
@@ -14,6 +16,20 @@ interface BookingProps {}
 
 const Booking: React.FC<BookingProps> = () => {
   const [value, setValue] = React.useState<Date | null>(new Date());
+  const { state, dispatch } = useContext(AppContext);
+
+  const confirmBooking = () => {
+    const data = {
+      date: value as Date,
+    };
+
+    dispatch({
+      type: "SET_DATA",
+      payload: data,
+    });
+
+    Router.push("/booking-confirmation");
+  };
 
   return (
     <AppLayout title="Booking">
@@ -34,24 +50,20 @@ const Booking: React.FC<BookingProps> = () => {
                 <FaClock />
                 <span className="text-lg">15 Minutes</span>
               </div>
-              <div className="flex items-center mt-4 text-green-500">
-                <FaCalendar />
-                <span className="text-lg">4:30pm</span>
-              </div>
             </div>
           </div>
           <div className="border md:my-6 lg:my-0 lg:mx-6"></div>
-          <div className="w-full lg:w-7/12 ">
-            <div className="w-full">
+          <div className="flex items-center justify-center w-full lg:w-7/12">
+            <div className="w-fit">
               <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <StaticDatePicker<Date>
-                  orientation="landscape"
+                <DateTimePicker<Date>
                   openTo="day"
                   value={value}
-                  shouldDisableDate={isWeekend}
+                  shouldDisableDate={isPast}
                   onChange={(newValue) => {
                     setValue(newValue);
                   }}
+                  onClose={() => confirmBooking()}
                   renderInput={(params) => <TextField {...params} />}
                 />
               </LocalizationProvider>
