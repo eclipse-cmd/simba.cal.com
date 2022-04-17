@@ -2,7 +2,6 @@ import AppContext, { initialState } from "@store/index";
 import reducer from "@store/reducer";
 import "@styles/globals.scss";
 import { SessionProvider } from "next-auth/react";
-import type { AppProps } from "next/app";
 import { useReducer } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

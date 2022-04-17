@@ -5,7 +5,7 @@ import { DateTimePicker } from "@mui/x-date-pickers";
 import AppContext from "@store/index";
 import { isPast } from "date-fns";
 import Image from "next/image";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import React, { useContext } from "react";
 import { FaClock } from "react-icons/fa";
 
@@ -13,7 +13,7 @@ import PublicLayout from "@components/PublicLayout";
 
 const Booking: React.FC = () => {
   const router = useRouter();
-  const [value, setValue] = React.useState<Date | null>();
+  const [value, setValue] = React.useState<Date | null>(new Date());
   const { state, dispatch } = useContext(AppContext);
 
   const confirmBooking = () => {

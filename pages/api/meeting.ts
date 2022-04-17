@@ -3,7 +3,6 @@ import handlebars from "handlebars";
 import moment from "moment";
 import { NextApiRequest, NextApiResponse } from "next";
 import nodemailer from "nodemailer";
-import path from "path";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const method = req.method;

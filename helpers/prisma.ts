@@ -13,7 +13,7 @@ export const prisma =
     log: ["query", "error", "warn"],
   });
 
-if (!IS_PRODUCTION) {
+if (IS_PRODUCTION) {
   globalThis.prisma = prisma;
 }
 

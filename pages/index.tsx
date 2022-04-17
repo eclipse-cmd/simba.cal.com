@@ -5,6 +5,7 @@ import moment from "moment";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
+import prisma from "@helpers/prisma";
 import * as toast from "@helpers/toast";
 
 import AppLayout from "@components/AppLayout";
@@ -250,16 +251,6 @@ const Home: React.FC<HomeProps> = ({ upcoming, cancelled, past }) => {
 };
 
 export const getServerSideProps = async () => {
-  if (!prisma) {
-    return {
-      props: {
-        upcoming: "",
-        cancelled: "",
-        past: "",
-      },
-    };
-    return;
-  }
   const upcoming = await prisma?.meeting.findMany({
     where: {
       status: "upcoming",

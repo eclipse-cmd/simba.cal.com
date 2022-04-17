@@ -1,7 +1,5 @@
-import { useSession } from "next-auth/react";
 import Head from "next/head";
-import Router from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 
 interface PublicLayoutProps {
   title?: string;

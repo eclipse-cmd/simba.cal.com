@@ -6,6 +6,8 @@ import Router from "next/router";
 import React, { useState } from "react";
 import { FaCheck, FaGoogle } from "react-icons/fa";
 
+import prisma from "@helpers/prisma";
+
 import PublicLayout from "@components/PublicLayout";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -112,11 +114,13 @@ const BookingSuccess: React.FC<BookingSuccessProps> = ({ meeting }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id } = context.query;
+  const param = context.params;
+
+  console.log("Param ID: ", param?.id);
 
   const meeting = await prisma?.meeting.findUnique({
     where: {
-      id: id as string,
+      id: param?.id as string,
     },
   });
 
