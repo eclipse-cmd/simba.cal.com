@@ -8,13 +8,10 @@ import { FaCalendar, FaPlus } from "react-icons/fa";
 
 import * as toast from "@helpers/toast";
 
-import AppLayout from "@components/AppLayout";
+import PublicLayout from "@components/PublicLayout";
 import ButtonLoader from "@components/ui/Button";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface BookingConfirmationProps {}
-
-const BookingConfirmation: React.FC<BookingConfirmationProps> = () => {
+const BookingConfirmation: React.FC = () => {
   const { state } = useContext(AppContext);
   const date = useMemo<Date | null>(() => state.data.date, [state.data.date]);
   const [input, setInput] = useState({});
@@ -54,7 +51,7 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = () => {
   }, [date]);
 
   return (
-    <AppLayout title="Confirmation">
+    <PublicLayout title="Confirmation">
       <div className="flex min-h-screen">
         <div className="w-11/12 max-w-5xl p-8 m-auto bg-white border content-div lg:flex md:w-8/12 lg:w-11/12">
           <div className="w-full lg:w-5/12">
@@ -153,7 +150,7 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = () => {
           </div>
         </div>
       </div>
-    </AppLayout>
+    </PublicLayout>
   );
 };
 

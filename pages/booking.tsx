@@ -9,12 +9,9 @@ import Router from "next/router";
 import React, { useContext } from "react";
 import { FaClock } from "react-icons/fa";
 
-import AppLayout from "@components/AppLayout";
+import PublicLayout from "@components/PublicLayout";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface BookingProps {}
-
-const Booking: React.FC<BookingProps> = () => {
+const Booking: React.FC = () => {
   const [value, setValue] = React.useState<Date | null>(new Date());
   const { state, dispatch } = useContext(AppContext);
 
@@ -32,7 +29,7 @@ const Booking: React.FC<BookingProps> = () => {
   };
 
   return (
-    <AppLayout title="Booking">
+    <PublicLayout title="Booking">
       <div className="flex min-h-screen">
         <div className="max-w-5xl p-8 m-auto bg-white border-2 border-gray-300 content-div lg:flex md:w-8/12 lg:w-11/12">
           <div className="w-full lg:w-5/12">
@@ -71,7 +68,7 @@ const Booking: React.FC<BookingProps> = () => {
           </div>
         </div>
       </div>
-    </AppLayout>
+    </PublicLayout>
   );
 };
 

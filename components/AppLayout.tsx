@@ -3,6 +3,7 @@ import { CircularProgress } from "@mui/material";
 import AppContext from "@store/index";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
+import Router from "next/router";
 import React, { useContext, useEffect } from "react";
 
 interface AppLayoutProps {
@@ -15,7 +16,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ title, children }) => {
   const { state, dispatch } = useContext(AppContext);
 
   useEffect(() => {
-    console.log(session);
     if (status === "authenticated") {
       dispatch({
         type: "SET_AUTH",
@@ -25,6 +25,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({ title, children }) => {
         type: "SET_SESSION",
         payload: session.id,
       });
+      return;
+    }
+
+    if (status === "unauthenticated") {
+      Router.push("/auth/login");
     }
   }, [dispatch, session, status]);
 

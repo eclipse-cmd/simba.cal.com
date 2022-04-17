@@ -60,7 +60,7 @@
   },
   "lint-staged": {
     "./{*,{pages,components,helpers}/**/*}.{js,ts,jsx,tsx}": [
-      "prettier --write",
+      "prettier",
       "eslint"
     ],
     "./prisma/schema.prisma": [

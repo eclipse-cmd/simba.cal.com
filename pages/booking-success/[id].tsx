@@ -1,4 +1,3 @@
-import { Meeting } from "@prisma/client";
 import moment from "moment";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
@@ -6,7 +5,7 @@ import Router from "next/router";
 import React, { useState } from "react";
 import { FaCheck, FaGoogle } from "react-icons/fa";
 
-import AppLayout from "@components/AppLayout";
+import PublicLayout from "@components/PublicLayout";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface BookingSuccessProps {
@@ -14,7 +13,7 @@ interface BookingSuccessProps {
 }
 
 const BookingSuccess: React.FC<BookingSuccessProps> = ({ meeting }) => {
-  const meet = JSON.parse(meeting) as Meeting;
+  const meet = JSON.parse(meeting);
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e: React.SyntheticEvent) => {
@@ -24,7 +23,7 @@ const BookingSuccess: React.FC<BookingSuccessProps> = ({ meeting }) => {
   };
 
   return (
-    <AppLayout title="Confirmation">
+    <PublicLayout title="Confirmation">
       <div className="flex min-h-screen">
         <div className="w-full p-8 m-auto content-login-div md:w-8/12 md:px-8 lg:px-10 lg:w-7/12">
           <div className="p-10 bg-white border max-w-[750px] m-auto">
@@ -107,7 +106,7 @@ const BookingSuccess: React.FC<BookingSuccessProps> = ({ meeting }) => {
           </div>
         </div>
       </div>
-    </AppLayout>
+    </PublicLayout>
   );
 };
 

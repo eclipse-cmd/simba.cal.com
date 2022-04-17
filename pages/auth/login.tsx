@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
+import { error } from "@helpers/toast";
+
 import PublicLayout from "@components/PublicLayout";
 import ButtonLoader from "@components/ui/Button";
 
@@ -30,17 +32,14 @@ const Login: React.FC = () => {
       callbackUrl,
     });
 
-    if (!response) {
-      setIsLoading(false);
-      throw new Error("Received empty response from next auth");
+    if (response?.error) {
+      error("Login failed, check your credentials and try again");
     }
 
-    if (!response.error) {
-      // we're logged in! let's do a hard refresh to the desired url
+    if (!response?.error) {
       window.location.replace(callbackUrl);
-      setIsLoading(false);
-      return;
     }
+    setIsLoading(false);
   };
 
   return (

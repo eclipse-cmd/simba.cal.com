@@ -7,24 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  user_id      String
-  expires      DateTime
-  user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-  @@map("sessions")
-}
-
 model User {
-  id         String    @id @default(cuid())
-  username   String    @unique
-  email      String    @unique
+  id         String   @id @default(cuid())
+  name       String
+  email      String   @unique
   password   String?
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now()) @updatedAt
-  Session    Session[]
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
 
   @@map("users")
 }

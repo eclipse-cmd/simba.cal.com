@@ -3,17 +3,18 @@ import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
 import { FaAngleDown } from "react-icons/fa";
 
+import * as toast from "@helpers/toast";
+
 import PublicLayout from "@components/PublicLayout";
 import ButtonLoader from "@components/ui/Button";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface SignProps {}
 
-const SignUp: React.FC<SignProps> = () => {
+const SignUp: React.FC = () => {
   const router = useRouter();
-  const email = useMemo(() => router.query.e, [router.query.e]);
+  const email = useMemo<string>(() => router.query.e as string, [router.query.e]);
   const [isLoading, setIsLoading] = useState(false);
-  const [input, setInput] = useState({ email: "good" });
+  const [input, setInput] = useState({ email: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -25,18 +26,20 @@ const SignUp: React.FC<SignProps> = () => {
     if (isLoading) return;
 
     setIsLoading(true);
-    console.log(input);
-    return;
 
-    const response = await axios.post("/api/auth/signup", input);
-
-    console.log(response);
-    return;
-
-    if (!response) {
-      setIsLoading(false);
-      throw new Error("Received empty response from next auth");
+    try {
+      const data = input;
+      if (email.length > 0) {
+        data.email = email;
+      }
+      const response = await axios.post("/api/auth/signup", data);
+      toast.success(response.data.message);
+      setTimeout(() => router.push("/auth/login"), 5000);
+    } catch (error: any) {
+      const message = error?.response.data.message;
+      toast.error(message);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -101,7 +104,7 @@ const SignUp: React.FC<SignProps> = () => {
                       <form onSubmit={handleSubmit} className="my-6">
                         <div className="flex">
                           <label htmlFor="Username" className="sr-only">
-                            Username
+                            Name
                           </label>
                           <input
                             type="text"
@@ -111,10 +114,11 @@ const SignUp: React.FC<SignProps> = () => {
                           />
                           <input
                             type="text"
-                            name="username"
+                            name="name"
+                            required
                             onChange={handleChange}
-                            id="username"
-                            placeholder="Username"
+                            id="name"
+                            placeholder="John Doe"
                             className="w-full px-3 py-2 font-medium border border-l-0 md:w-10/12"
                           />
                         </div>
@@ -124,10 +128,9 @@ const SignUp: React.FC<SignProps> = () => {
                           </label>
                           <input
                             type="email"
-                            value={email ?? ""}
                             name="email"
                             onChange={handleChange}
-                            placeholder="Email address"
+                            placeholder={email ?? "Email address"}
                             className="w-full px-3 py-2 font-medium border"
                           />
                         </div>
@@ -138,13 +141,14 @@ const SignUp: React.FC<SignProps> = () => {
                           <input
                             type="password"
                             name="password"
+                            required
                             onChange={handleChange}
                             placeholder="********"
                             className="w-full px-3 py-2 font-medium border"
                           />
                         </div>
-                        <div className="SIGNUP-bBTN">
-                          <ButtonLoader value="Sign up for free" isLoading={false} type="submit" />
+                        <div>
+                          <ButtonLoader value="Sign up for free" isLoading={isLoading} type="submit" />
                         </div>
                       </form>
                     </div>
