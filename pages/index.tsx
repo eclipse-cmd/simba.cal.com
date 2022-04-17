@@ -145,7 +145,7 @@ const Home: React.FC<HomeProps> = ({ upcoming, cancelled, past }) => {
                           </div>
                           <div className="p-2 ">
                             <a
-                              href="#"
+                              href={"javascript:void(0)"}
                               className="flex items-center justify-center w-full p-2 m-auto border lg:m-0">
                               <i className="mr-2 fa-regular fa-clock"></i>
                               <span className="capitalize">reschedule</span>
@@ -250,6 +250,16 @@ const Home: React.FC<HomeProps> = ({ upcoming, cancelled, past }) => {
 };
 
 export const getServerSideProps = async () => {
+  if (!prisma) {
+    return {
+      props: {
+        upcoming: "",
+        cancelled: "",
+        past: "",
+      },
+    };
+    return;
+  }
   const upcoming = await prisma?.meeting.findMany({
     where: {
       status: "upcoming",

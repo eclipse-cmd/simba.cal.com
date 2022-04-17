@@ -5,14 +5,15 @@ import { DateTimePicker } from "@mui/x-date-pickers";
 import AppContext from "@store/index";
 import { isPast } from "date-fns";
 import Image from "next/image";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import React, { useContext } from "react";
 import { FaClock } from "react-icons/fa";
 
 import PublicLayout from "@components/PublicLayout";
 
 const Booking: React.FC = () => {
-  const [value, setValue] = React.useState<Date | null>(new Date());
+  const router = useRouter();
+  const [value, setValue] = React.useState<Date | null>();
   const { state, dispatch } = useContext(AppContext);
 
   const confirmBooking = () => {
@@ -25,7 +26,7 @@ const Booking: React.FC = () => {
       payload: data,
     });
 
-    Router.push("/booking-confirmation");
+    router.push("/booking-confirmation");
   };
 
   return (
@@ -60,6 +61,7 @@ const Booking: React.FC = () => {
                   onChange={(newValue) => {
                     setValue(newValue);
                   }}
+                  disableCloseOnSelect
                   onClose={() => confirmBooking()}
                   renderInput={(params) => <TextField {...params} />}
                 />

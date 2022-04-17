@@ -1,3 +1,4 @@
+import { Meeting } from "@prisma/client";
 import moment from "moment";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
@@ -13,7 +14,7 @@ interface BookingSuccessProps {
 }
 
 const BookingSuccess: React.FC<BookingSuccessProps> = ({ meeting }) => {
-  const meet = JSON.parse(meeting);
+  const meet = JSON.parse(meeting) as Meeting;
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e: React.SyntheticEvent) => {
@@ -93,7 +94,7 @@ const BookingSuccess: React.FC<BookingSuccessProps> = ({ meeting }) => {
                   type="text"
                   name="email"
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="user@example.com"
+                  placeholder={meet.attendee_email}
                   className="w-8/12 px-3 py-2 font-medium border outline-0 md:w-9/12"
                 />
                 <button
@@ -111,11 +112,11 @@ const BookingSuccess: React.FC<BookingSuccessProps> = ({ meeting }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id } = context.params;
+  const { id } = context.query;
 
   const meeting = await prisma?.meeting.findUnique({
     where: {
-      id: id,
+      id: id as string,
     },
   });
 

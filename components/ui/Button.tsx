@@ -1,6 +1,6 @@
+/* eslint-disable prettier/prettier */
 import { Button, CircularProgress } from "@mui/material";
 import React from "react";
-
 interface Props {
   type?: "button" | "submit";
   value: string;
@@ -14,7 +14,8 @@ const ButtonLoader: React.FC<Props> = ({
   size = "small",
   value,
   isLoading,
-  clickFunction = () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  clickFunction = () => { },
 }) => {
   return (
     <Button
@@ -33,5 +34,4 @@ const ButtonLoader: React.FC<Props> = ({
     </Button>
   );
 };
-
 export default ButtonLoader;

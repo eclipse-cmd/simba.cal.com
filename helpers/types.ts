@@ -1,9 +1,3 @@
-export type APIResponse = {
-  status: boolean;
-  message: string;
-  data?: [];
-};
-
 export type User = {
   _id: string;
   name: string;
