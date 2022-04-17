@@ -36,7 +36,7 @@ const SignUp: React.FC = () => {
       toast.success(response.data.message);
       setTimeout(() => router.push("/auth/login"), 5000);
     } catch (error: any) {
-      const message = error?.response.data.message;
+      const message = error?.response.data.message ?? "Sign up failed, pleast try again";
       toast.error(message);
     }
     setIsLoading(false);
