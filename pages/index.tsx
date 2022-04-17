@@ -1,6 +1,8 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Meeting } from "@prisma/client";
 import axios from "axios";
 import moment from "moment";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 import * as toast from "@helpers/toast";
@@ -40,16 +42,16 @@ function a11yProps(index: number) {
 }
 
 interface HomeProps {
-  upcoming: any;
-  cancelled: any;
-  past: any;
+  upcoming: string;
+  cancelled: string;
+  past: string;
 }
 
 const Home: React.FC<HomeProps> = ({ upcoming, cancelled, past }) => {
   const [value, setValue] = React.useState(0);
-  const [upcomingMeeting, setUpcomingMeeting] = useState([]);
-  const [cancelledMeeting, setCancelledMeeting] = useState([]);
-  const [pastMeeting, setPastMeeting] = useState([]);
+  const [upcomingMeeting, setUpcomingMeeting] = useState<Meeting[]>([]);
+  const [cancelledMeeting, setCancelledMeeting] = useState<Meeting[]>([]);
+  const [pastMeeting, setPastMeeting] = useState<Meeting[]>([]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -58,12 +60,11 @@ const Home: React.FC<HomeProps> = ({ upcoming, cancelled, past }) => {
   const cancledMeeting = async (id: string) => {
     const response = await axios.delete("/api/meeting?id=" + id);
 
-    const meeting = response.data.meeting;
+    const meeting = response.data.meeting as Meeting;
 
-    setUpcomingMeeting(upcomingMeeting.filter((meeting) => meeting !== meeting.id));
+    setUpcomingMeeting(upcomingMeeting.filter((meet) => meet.id !== meeting.id));
     setCancelledMeeting([...cancelledMeeting, { ...meeting }]);
     toast.success(response.data.message);
-    console.log(upcomingMeeting);
   };
 
   useEffect(() => {
@@ -77,7 +78,9 @@ const Home: React.FC<HomeProps> = ({ upcoming, cancelled, past }) => {
       <div className="w-full p-4 py-10 xl:px-10">
         <div className="header-text">
           <div className="font-semibold">
-            <p>Bookings</p>
+            <Link href="/booking">
+              <a>Bookings</a>
+            </Link>
           </div>
           <div className="mb-6 text-xs text-slate-500">
             <p>See upcoming and past events booked through your event type link</p>
@@ -109,7 +112,7 @@ const Home: React.FC<HomeProps> = ({ upcoming, cancelled, past }) => {
               <TabPanel value={value} index={0}>
                 {upcomingMeeting.length > 0 ? (
                   <>
-                    {upcomingMeeting.map((meeting: any, index: number) => (
+                    {upcomingMeeting.map((meeting, index: number) => (
                       <div key={index} className="block p-5 mb-5 bg-white border lg:flex">
                         <div className="flex w-full text-sm lg:6/12 lg:mx-2 md:text-sm ">
                           <div className="w-3/12">
@@ -166,7 +169,7 @@ const Home: React.FC<HomeProps> = ({ upcoming, cancelled, past }) => {
               <TabPanel value={value} index={1}>
                 {cancelledMeeting.length > 0 ? (
                   <>
-                    {cancelledMeeting.map((meeting: any, index: number) => (
+                    {cancelledMeeting.map((meeting, index: number) => (
                       <div key={index} className="block p-5 mb-5 bg-white border lg:flex">
                         <div className="flex w-full text-sm lg:6/12 lg:mx-2 md:text-sm ">
                           <div className="w-3/12">
@@ -185,24 +188,6 @@ const Home: React.FC<HomeProps> = ({ upcoming, cancelled, past }) => {
                               {meeting.notes ?? "No notes available"}
                             </p>
                             <p className="my-1 text-sm">{meeting.attendee_email}</p>
-                          </div>
-                        </div>
-                        <div className="flex justify-center w-full lg:w-4/12">
-                          <div className="p-2 ">
-                            <a
-                              href="#"
-                              className="flex items-center justify-center w-full p-2 m-auto border lg:m-0">
-                              <i className="mr-2 fa-solid fa-xmark"></i>
-                              <span className="capitalize">cancel</span>
-                            </a>
-                          </div>
-                          <div className="p-2 ">
-                            <a
-                              href="#"
-                              className="flex items-center justify-center w-full p-2 m-auto border lg:m-0">
-                              <i className="mr-2 fa-regular fa-clock"></i>
-                              <span className="capitalize">reschedule</span>
-                            </a>
                           </div>
                         </div>
                       </div>
@@ -222,7 +207,7 @@ const Home: React.FC<HomeProps> = ({ upcoming, cancelled, past }) => {
               <TabPanel value={value} index={2}>
                 {pastMeeting.length > 0 ? (
                   <>
-                    {pastMeeting.map((meeting: any, index: number) => (
+                    {pastMeeting.map((meeting, index: number) => (
                       <div key={index} className="block p-5 mb-5 bg-white border lg:flex">
                         <div className="flex w-full text-sm lg:6/12 lg:mx-2 md:text-sm ">
                           <div className="w-3/12">
@@ -241,24 +226,6 @@ const Home: React.FC<HomeProps> = ({ upcoming, cancelled, past }) => {
                               {meeting.notes ?? "No notes available"}
                             </p>
                             <p className="my-1 text-sm">{meeting.attendee_email}</p>
-                          </div>
-                        </div>
-                        <div className="flex justify-center w-full lg:w-4/12">
-                          <div className="p-2 ">
-                            <a
-                              href="#"
-                              className="flex items-center justify-center w-full p-2 m-auto border lg:m-0">
-                              <i className="mr-2 fa-solid fa-xmark"></i>
-                              <span className="capitalize">cancel</span>
-                            </a>
-                          </div>
-                          <div className="p-2 ">
-                            <a
-                              href="#"
-                              className="flex items-center justify-center w-full p-2 m-auto border lg:m-0">
-                              <i className="mr-2 fa-regular fa-clock"></i>
-                              <span className="capitalize">reschedule</span>
-                            </a>
                           </div>
                         </div>
                       </div>
