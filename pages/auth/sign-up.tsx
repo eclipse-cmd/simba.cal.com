@@ -14,7 +14,7 @@ const SignUp: React.FC = () => {
   const router = useRouter();
   const email = useMemo<string>(() => router.query.e as string, [router.query.e]);
   const [isLoading, setIsLoading] = useState(false);
-  const [input, setInput] = useState({ email: "" });
+  const [input, setInput] = useState({ email: "", password: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -27,11 +27,19 @@ const SignUp: React.FC = () => {
 
     setIsLoading(true);
 
+    const data = input;
+    if (input.email.length > 0) {
+      data.email = input.email;
+    }
+
+    //check password
+    if (input.password.length < 10) {
+      toast.error("Password must have a mininmum of 10 characters");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const data = input;
-      if (email.length > 0) {
-        data.email = email;
-      }
       const response = await axios.post("/api/auth/signup", data);
       toast.success(response.data.message);
       setTimeout(() => router.push("/auth/login"), 5000);
